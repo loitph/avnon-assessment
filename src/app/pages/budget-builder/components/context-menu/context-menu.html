@@ -1,0 +1,8 @@
+<div
+  class="fixed bg-white border border-solid border-gray-500 rounded p-3 shadow-md z-50"
+  [style.left.px]="x"
+  [style.top.px]="y"
+  (click)="$event.stopPropagation()"
+>
+  <button (click)="apply.emit()">Apply to all</button>
+</div>

@@ -1,0 +1,19 @@
+{
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "tailwindCSS.includeLanguages": {
+    "typescript": "html",
+    "html": "html"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["class=[\"']([^\"']*)[\"']", "[\"']([^\"']*)[\"']"],
+    ["className=[\"']([^\"']*)[\"']", "[\"']([^\"']*)[\"']"]
+  ],
+  "css.validate": false,
+  "editor.inlineSuggest.enabled": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

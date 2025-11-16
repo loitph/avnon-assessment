@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-size: 17px;
+}
+
+input {
+  @apply outline-none border border-gray-300 bg-slate-50 rounded px-2 py-1 text-sm;
+}
+
+input:focus {
+  @apply bg-blue-50;
+}
+
+.cell-input {
+  @apply w-full h-full text-right pr-2;
+}
+
+.context-menu {
+  @apply absolute bg-white shadow-lg rounded-md py-1 z-50 border;
+}
+
+.scrollbar-gutter {
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
+}

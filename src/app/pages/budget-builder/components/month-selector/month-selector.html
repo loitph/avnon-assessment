@@ -1,0 +1,32 @@
+<div class="flex gap-4 w-full text-2xl p-4 border-solid border-b-2 border-black bg-[papayawhip]">
+  <div>
+    <label
+      class="block text-sm font-medium"
+      for="month-start-selector"
+    >
+      Start
+    </label>
+    <input
+      id="month-start-selector"
+      type="month"
+      [(ngModel)]="start"
+      (change)="update()"
+      class="mt-1"
+    />
+  </div>
+  <div>
+    <label
+      class="block text-sm font-medium"
+      for=""
+    >
+      End
+    </label>
+    <input
+      id="month-end-selector"
+      type="month"
+      [(ngModel)]="end"
+      (change)="update()"
+      class="mt-1"
+    >
+  </div>
+</div>

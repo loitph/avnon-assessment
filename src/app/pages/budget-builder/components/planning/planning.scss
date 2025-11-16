@@ -1,0 +1,15 @@
+.syncBox {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.syncBox::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.syncBox {
+  p, input {
+    flex-shrink: 0;
+    width: 200px; /* fixed width */
+  }
+}

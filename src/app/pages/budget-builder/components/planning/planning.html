@@ -1,0 +1,279 @@
+<div class="flex flex-col bg-[papayawhip]">
+  <!-- monthly -->
+  <div class="flex justify-between gap-4 h-auto border-b-2 border-solid border-black px-20">
+    <!-- fake block -->
+    <div class="min-w-64"></div>
+
+    <!-- items -->
+    <div
+      #syncBox
+      class="syncBox flex gap-2 overflow-auto whitespace-nowrap py-4"
+      (scroll)="onScroll($event)"
+    >
+      @for (m of months() || []; track $index) {
+        <p >
+          {{ m.label }}
+        </p>
+      }
+    </div>
+  </div>
+
+  <!-- parent categories -->
+  <p class="text-xl italic px-4 font-bold underline h-[55px] max-h-[55px] flex items-center">Income</p>
+  <div class="p-4 flex flex-col border-y-2 border-solid border-black">
+    @for (parent of incomeCategories() || []; track $index) {
+      <div class="p-4 flex flex-col">
+        <div class="flex justify-between px-2 border-b-2 border-x-2 border-solid border-black">
+          <p>{{ parent.name }}</p>
+          <button (click)="removeParentCategory(parent.id)">x</button>
+        </div>
+        
+        <!-- child categories -->
+        <div class="px-12 border-x-2 border-solid border-black">
+          @for (child of data().categories || []; track $index) {
+            @if (child.parentId == parent.id) {
+              <div class="flex justify-between gap-4 h-auto border-b-2 border-solid border-black">
+                <p class="min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">{{ child.name }}</p>
+
+                <!-- items -->
+                <div
+                  #syncBox
+                  class="syncBox flex gap-2 overflow-auto whitespace-nowrap py-4"
+                  (scroll)="onScroll($event)"
+                >
+                  @for (item of getRow(child.id, parent.id) || []; track $index) {
+                    <input
+                      #input
+                      type="number"
+                      [ngModel]="item.value"
+                      (ngModelChange)="updateCell(child.id, parent.id, item.month, $event)"
+                      (contextmenu)="showContext($event, child.id)"
+                    />
+                  }
+                </div>
+
+                <button (click)="removeCategory(child.id)">x</button>
+              </div>
+  
+            }
+          }
+        </div>
+
+        <!-- add category button -->
+        <div
+          class="w-full hover:cursor-pointer hover:italic hover:underline hover:text-lg px-12 flex items-center h-[55px] max-h-[55px] border-b-2 border-x-2 border-solid border-black"
+          (click)="addCategory(parent.id, parent.type)"
+        >
+          <p>
+            Add new <b>{{ parent.type | titlecase }}</b> sub-category
+          </p>
+        </div>
+  
+        <!-- totals -->
+        <div
+          class="flex px-12 gap-4 border-b-2 border-x-2 border-solid border-black"
+        >
+          <b class="italic min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">Sub total:</b>
+          <div
+            #syncBox
+            class="syncBox flex overflow-auto whitespace-nowrap gap-2"
+            (scroll)="onScroll($event)"
+          >
+            @for (total of parentTotalsById().get(parent.id); track $index) {
+              <p class="font-bold border-r-2 border-solid border-black py-4 px-2 text-sm">{{ total }}</p>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- add category button -->
+    <div
+      class="w-full hover:cursor-pointer hover:italic hover:underline text-lg hover:text-xl px-16 flex items-center h-[55px] max-h-[55px] border-b-2 border-solid border-black"
+      (click)="addParentCategory('income')"
+    >
+      <p>
+        Add new <b>{{ 'income' | titlecase }}</b> category
+      </p>
+    </div>
+
+    <!-- totals -->
+    <div
+      class="flex px-16 gap-4 border-b-2 border-solid border-black"
+    >
+      <b class="italic text-lg min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">Total:</b>
+      <div
+        #syncBox
+        class="syncBox flex overflow-auto whitespace-nowrap gap-2"
+        (scroll)="onScroll($event)"
+      >
+        @for (total of totalMonthlyIncome(); track $index) {
+          <p class="font-bold border-r-2 border-solid border-black py-4 px-2 text-sm">{{ total }}</p>
+        }
+      </div>
+    </div>
+  </div>
+
+
+  <!-- parent categories -->
+  <p class="text-xl italic px-4 font-bold underline h-[55px] max-h-[55px] flex items-center">Expense</p>
+  <div class="p-4 flex flex-col border-y-2 border-solid border-black">
+    @for (parent of expensesCategories() || []; track $index) {
+      <div class="p-4 flex flex-col">
+        <div class="flex justify-between px-2 border-b-2 border-x-2 border-solid border-black">
+          <p>{{ parent.name }}</p>
+          <button (click)="removeParentCategory(parent.id)">x</button>
+        </div>
+        
+        <!-- child categories -->
+        <div class="px-12 border-x-2 border-solid border-black">
+          @for (child of data().categories || []; track $index) {
+            @if (child.parentId == parent.id) {
+              <div class="flex justify-between gap-4 h-auto border-b-2 border-solid border-black">
+                <p class="min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">{{ child.name }}</p>
+
+                <!-- items -->
+                <div
+                  #syncBox
+                  class="syncBox flex gap-2 overflow-auto whitespace-nowrap py-4"
+                  (scroll)="onScroll($event)"
+                >
+                  @for (item of getRow(child.id, parent.id) || []; track $index) {
+                    <input
+                      #input
+                      type="number"
+                      [ngModel]="item.value"
+                      (ngModelChange)="updateCell(child.id, parent.id, item.month, $event)"
+                      (contextmenu)="showContext($event, child.id)"
+                    />
+                  }
+                </div>
+
+                <button (click)="removeCategory(child.id)">x</button>
+              </div>
+  
+            }
+          }
+        </div>
+
+        <!-- add category button -->
+        <div
+          class="w-full hover:cursor-pointer hover:italic hover:underline hover:text-lg px-12 flex items-center h-[55px] max-h-[55px] border-b-2 border-x-2 border-solid border-black"
+          (click)="addCategory(parent.id, parent.type)"
+        >
+          <p>
+            Add new <b>{{ parent.type | titlecase }}</b> sub-category
+          </p>
+        </div>
+
+        <!-- totals -->
+        <div
+          class="flex px-12 gap-4 border-b-2 border-x-2 border-solid border-black"
+        >
+          <b class="italic min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">Sub total:</b>
+          <div
+            #syncBox
+            class="syncBox flex overflow-auto whitespace-nowrap gap-2"
+            (scroll)="onScroll($event)"
+          >
+            @for (total of parentTotalsById().get(parent.id); track $index) {
+              <p class="font-bold border-r-2 border-solid border-black py-4 px-2 text-sm">{{ total }}</p>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- add category button -->
+    <div
+      class="w-full hover:cursor-pointer hover:italic hover:underline text-lg hover:text-xl px-16 flex items-center h-[55px] max-h-[55px] border-b-2 border-solid border-black"
+      (click)="addParentCategory('expense')"
+    >
+      <p>
+        Add new <b>{{ 'expense' | titlecase }}</b> category
+      </p>
+    </div>
+
+    <!-- totals -->
+    <div
+      class="flex px-16 gap-4 border-b-2 border-solid border-black"
+    >
+      <b class="italic text-lg min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">Total:</b>
+      <div
+        #syncBox
+        class="syncBox flex overflow-auto whitespace-nowrap gap-2"
+        (scroll)="onScroll($event)"
+      >
+        @for (total of totalMonthlyExpense(); track $index) {
+          <p class="font-bold border-r-2 border-solid border-black py-4 px-2 text-sm">{{ total }}</p>
+        }
+      </div>
+    </div>
+  </div>
+
+
+  <div class="px-4 flex flex-col">
+    <!-- profit and loss -->
+    <div
+      class="flex px-16 gap-4 border-b-2 border-solid border-black"
+    >
+      <b class="italic text-lg min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">
+        Profit and loss:
+      </b>
+      <div
+        #syncBox
+        class="syncBox flex overflow-auto whitespace-nowrap gap-2"
+        (scroll)="onScroll($event)"
+      >
+        @for (pnl of profitAndLoss(); track $index) {
+          <p class="font-bold border-r-2 border-solid border-black py-4 px-2 text-sm">{{ pnl }}</p>
+        }
+      </div>
+    </div>
+
+    <!-- opening balance -->
+    <div
+      class="flex px-16 gap-4 border-b-2 border-solid border-black"
+    >
+      <b class="italic text-lg min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">
+        Opening balance:
+      </b>
+      <div
+        #syncBox
+        class="syncBox flex overflow-auto whitespace-nowrap gap-2"
+        (scroll)="onScroll($event)"
+      >
+        @for (pnl of openingBalance(); track $index) {
+          <p class="font-bold border-r-2 border-solid border-black py-4 px-2 text-sm">{{ pnl }}</p>
+        }
+      </div>
+    </div>
+
+    <!-- closing balance -->
+    <div
+      class="flex px-16 gap-4 border-b-2 border-solid border-black"
+    >
+      <b class="italic text-lg min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">
+        Closing balance:
+      </b>
+      <div
+        #syncBox
+        class="syncBox flex overflow-auto whitespace-nowrap gap-2"
+        (scroll)="onScroll($event)"
+      >
+        @for (pnl of closingBalance(); track $index) {
+          <p class="font-bold border-r-2 border-solid border-black py-4 px-2 text-sm">{{ pnl }}</p>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Context Menu -->
+@if (context().visible) {
+  <bb-context-menu
+    [x]="context().x"
+    [y]="context().y"
+    (apply)="applyToAll()"
+  />
+}
