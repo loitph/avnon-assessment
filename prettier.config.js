@@ -1,7 +1,5 @@
-// prettier.config.js
 /** @type {import("prettier").Config} */
 module.exports = {
-  // === Core Formatting ===
   semi: true,
   trailingComma: 'es5',
   singleQuote: true,
@@ -10,21 +8,14 @@ module.exports = {
   useTabs: false,
   arrowParens: 'avoid',
   endOfLine: 'lf',
-
-  // === HTML & Angular Templates ===
   htmlWhitespaceSensitivity: 'css',
   bracketSameLine: false,
-
-  // === SCSS ===
   scss: {
-    // SCSS-specific rules
     files: '*.scss',
     options: {
       parser: 'scss',
     },
   },
-
-  // === File-Specific Overrides ===
   overrides: [
     {
       files: '*.html',
