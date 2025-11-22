@@ -6,6 +6,22 @@
   font-size: 17px;
 }
 
+.border-primary {
+  @apply border-solid border-2 border-black;
+}
+
+.border-left-primary {
+  @apply border-l-2 border-black border-solid;
+}
+
+.border-right-primary {
+  @apply border-r-2 border-black border-solid;
+}
+
+.border-bottom-primary {
+  @apply border-b-2 border-black border-solid;
+}
+
 input {
   @apply outline-none border border-gray-300 bg-slate-50 rounded px-2 py-1 text-sm;
 }
@@ -26,3 +42,12 @@ input:focus {
   scrollbar-gutter: stable;
   scroll-behavior: smooth;
 }
+
+.button-primary {
+  @apply font-bold underline hover:italic;
+}
+
+.button-secondary {
+  @apply font-semibold hover:italic;
+}
+
