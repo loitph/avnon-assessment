@@ -1,4 +1,5 @@
 export type MonthVal = string;
+
 export type Income = 'income';
 export type Expense = 'expense';
 
@@ -26,8 +27,6 @@ export interface DataItemCategory extends ItemCategory {
 }
 
 export interface DataBudget {
-  startMonth: MonthVal;
-  endMonth: MonthVal;
   parentCategories: ParentCategory[];
   categories: ItemCategory[];
   rows: DataItemCategory[]
