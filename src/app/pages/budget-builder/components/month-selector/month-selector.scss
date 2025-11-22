@@ -1,0 +1,7 @@
+.date-container {
+  @apply flex w-full gap-4 justify-start items-center text-2xl p-4;
+}
+
+.date-title {
+  @apply block text-sm font-medium;
+}

@@ -7,6 +7,7 @@ import {
   ElementRef,
   HostListener,
   inject,
+  OnDestroy,
   QueryList,
   signal,
   ViewChildren,
@@ -21,7 +22,7 @@ import {
 import { ContextMenu } from '@components/context-menu/context-menu';
 import { Expense, Income, ItemDataDialog } from '@models/budget.model';
 import { BudgetService } from '@services/budget-service/budget-service';
-import { debounceTime, Subject, tap } from 'rxjs';
+import { debounceTime, Subject, takeUntil, tap } from 'rxjs';
 import { Dialog } from '@components/dialog/dialog';
 import { forbiddenNameValidator } from '@directives/forbidden-name.directive';
 
@@ -32,7 +33,9 @@ import { forbiddenNameValidator } from '@directives/forbidden-name.directive';
   styleUrl: './planning.scss',
   host: { class: 'sync-scroll-x-host' },
 })
-export class Planning implements AfterViewInit {
+export class Planning implements AfterViewInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
   @ViewChildren('input') inputs!: QueryList<ElementRef<HTMLInputElement>>;
   private inputArray: HTMLInputElement[] = [];
 
@@ -127,6 +130,8 @@ export class Planning implements AfterViewInit {
       if (isDateUpdated) {
         this.updateInputArray();
         this.focusFirst();
+
+        this.budgetService.isDateUpdated.set(false);
       }
     });
   }
@@ -135,9 +140,11 @@ export class Planning implements AfterViewInit {
     this.updateInputArray();
     this.focusFirst();
 
-    this.inputs.changes.subscribe(() => {
-      this.updateInputArray();
-    });
+    this.inputs.changes
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.updateInputArray();
+      });
   }
 
   onScroll(event: Event) {
@@ -284,5 +291,10 @@ export class Planning implements AfterViewInit {
       isParent: false,
       targetId: '',
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

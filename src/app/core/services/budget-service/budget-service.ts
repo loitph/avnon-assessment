@@ -12,10 +12,10 @@ import {
   providedIn: 'root',
 })
 export class BudgetService {
-  data = signal<DataBudget>({
-    startMonth: '2025-01',
-    endMonth: '2025-12',
+  _numberOfMonths = signal(12);
+  _year = signal(2025);
 
+  data = signal<DataBudget>({
     parentCategories: [
       {
         id: 'pcat-1',
@@ -186,8 +186,7 @@ export class BudgetService {
     });
   }
 
-  setDateRange(start: MonthVal, end: MonthVal) {
-    this.data.update((d) => ({ ...d, startMonth: start, endMonth: end }));
+  setDateRange() {
     this.initRow();
     this.isDateUpdated.set(true);
   }
@@ -210,34 +209,26 @@ export class BudgetService {
     });
   }
 
-  private generateMonths(): { key: MonthVal; label: string }[] {
-    const start = this.data().startMonth;
-    const end = this.data().endMonth;
-    const months: { key: MonthVal; label: string }[] = [];
-    let [startYear, startMonth] = start.split('-').map(Number);
-    let [endYear, endMonth] = end.split('-').map(Number);
+    private generateMonths(): { key: MonthVal; label: string }[] {
+      let startMonth = 1;
+      let endMonth = this._numberOfMonths();
+      const year = this._year();
+      const months: { key: MonthVal; label: string }[] = [];
 
-    while (startYear < endYear || (startYear === endYear && startMonth <= endMonth)) {
-      months.push({
-        // ex: "2025-01"
-        key: `${startYear}-${startMonth.toString().padStart(2, '0')}` as MonthVal,
+      while (startMonth <= endMonth) {
+        months.push({
+          key: `${year}-${startMonth.toString().padStart(2, '0')}` as MonthVal,
+          label: new Date(year, startMonth - 1).toLocaleString('default', {
+            month: 'short',
+            year: 'numeric',
+          }),
+        });
 
-        // ex: "Jan 2025"
-        label: new Date(startYear, startMonth - 1).toLocaleString('default', {
-          month: 'short',
-          year: 'numeric',
-        }),
-      });
+        startMonth++;
+      }
 
-      // auto increasement month and year if needed
-      if (startMonth === 12) {
-        startMonth = 1;
-        startYear++;
-      } else startMonth++;
+      return months;
     }
-
-    return months;
-  }
 
   addCategory(parentId: string, name: string, type: Income | Expense) {
     const id = `cat-${this.data().categories.length + 1}`;

@@ -1,32 +1,41 @@
-<div class="flex gap-4 w-full text-2xl p-4 border-solid border-b-2 border-black bg-[papayawhip]">
+<div class="date-container">
   <div>
     <label
-      class="block text-sm font-medium"
-      for="month-start-selector"
+      class="date-title"
+      for="month-selector"
     >
-      Start
+      Number of months:
     </label>
-    <input
-      id="month-start-selector"
-      type="month"
-      [(ngModel)]="start"
-      (change)="update()"
-      class="mt-1"
-    />
+
+    <select
+      id="month-selector"
+      class="outline-none text-base border-primary"
+      [ngModel]="_numberOfMonths()"
+      (change)="updateMonth($event)"
+    >
+      @for (month of months; track $index) {
+        <option [value]="month">{{ month }}</option>
+      }
+    </select>
   </div>
+
   <div>
     <label
-      class="block text-sm font-medium"
-      for=""
+      class="date-title"
+      for="year-selector"
     >
-      End
+      Year:
     </label>
-    <input
-      id="month-end-selector"
-      type="month"
-      [(ngModel)]="end"
-      (change)="update()"
-      class="mt-1"
+
+    <select
+      id="year-selector"
+      class="outline-none text-base border-primary"
+      [ngModel]="_year()"
+      (change)="updateYear($event)"
     >
+      @for (year of years; track $index) {
+        <option [value]="year">{{ year }}</option>
+      }
+    </select>
   </div>
 </div>

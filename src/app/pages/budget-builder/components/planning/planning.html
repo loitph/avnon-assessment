@@ -1,5 +1,5 @@
-<div class="flex flex-col bg-[papayawhip]">
-  <div class="flex justify-between gap-4 h-auto border-b-2 border-solid border-black px-20">
+<div class="flex flex-col">
+  <div class="flex gap-4 h-auto border-b-2 border-solid border-black px-20">
     <div class="min-w-64"></div>
 
     <div
@@ -27,7 +27,7 @@
         <div class="px-12 border-x-2 border-solid border-black">
           @for (child of data().categories || []; track $index) {
             @if (child.parentId == parent.id) {
-              <div class="flex justify-between gap-4 h-auto border-b-2 border-solid border-black">
+              <div class="flex gap-4 h-auto border-b-2 border-solid border-black">
                 <p class="min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">{{ child.name }}</p>
 
                 <div
@@ -117,7 +117,7 @@
         <div class="px-12 border-x-2 border-solid border-black">
           @for (child of data().categories || []; track $index) {
             @if (child.parentId == parent.id) {
-              <div class="flex justify-between gap-4 h-auto border-b-2 border-solid border-black">
+              <div class="flex gap-4 h-auto border-b-2 border-solid border-black">
                 <p class="min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">{{ child.name }}</p>
 
                 <div
