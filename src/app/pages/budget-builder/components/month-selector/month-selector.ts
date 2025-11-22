@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MonthVal } from '@models/budget.model';
 import { BudgetService } from '@services/budget-service/budget-service';
 
 @Component({
