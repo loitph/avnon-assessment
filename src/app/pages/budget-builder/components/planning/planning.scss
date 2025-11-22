@@ -21,3 +21,15 @@
 .invalid-category-input {
   @apply border-red-400 border-solid;
 }
+
+.input-category-name {
+  @apply w-full border-solid border-black border-2;
+}
+
+.input-budget-amount {
+  @apply border-2 border-black border-solid;
+}
+
+.no-subcategories {
+  @apply py-8 text-center italic border-b-2 border-solid border-black;
+}

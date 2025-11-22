@@ -16,40 +16,45 @@
   </div>
 
   <p class="text-xl italic px-4 font-bold underline h-[55px] max-h-[55px] flex items-center">Income</p>
+
   <div class="p-4 flex flex-col border-y-2 border-solid border-black">
-    @for (parent of incomeCategories() || []; track $index) {
+    @for (parent of incomeCategories() || []; track parent.id) {
       <div class="p-4 flex flex-col">
         <div class="flex justify-between px-2 border-b-2 border-x-2 border-solid border-black">
           <p>{{ parent.name }}</p>
           <button (click)="openRemovedCategoryDialog(parent.id, parent.name, true)">x</button>
         </div>
-        
+
         <div class="px-12 border-x-2 border-solid border-black">
-          @for (child of data().categories || []; track $index) {
-            @if (child.parentId == parent.id) {
-              <div class="flex gap-4 h-auto border-b-2 border-solid border-black">
-                <p class="min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">{{ child.name }}</p>
+          @for (child of childrenOfParent(parent.id); track child.id) {
+            <div class="flex gap-4 h-auto border-b-2 border-solid border-black">
+              <p class="min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">{{ child.name }}</p>
 
-                <div
-                  #syncBox
-                  class="syncBox flex gap-2 overflow-auto whitespace-nowrap py-4"
-                  (scroll)="onScroll($event)"
-                >
-                  @for (item of getRow(child.id, parent.id) || []; track $index) {
-                    <input
-                      #input
-                      type="number"
-                      [ngModel]="item.value"
-                      (ngModelChange)="updateCell(child.id, parent.id, item.month, $event)"
-                      (contextmenu)="showContext($event, child.id)"
-                    />
-                  }
-                </div>
-
-                <button (click)="openRemovedCategoryDialog(child.id, child.name)">x</button>
+              <div
+                #syncBox
+                class="syncBox flex gap-2 overflow-auto whitespace-nowrap py-4"
+                (scroll)="onScroll($event)"
+              >
+                @for (item of getRow(child.id, parent.id) || []; track item.month) {
+                  <input
+                    #input
+                    type="number"
+                    class="input-budget-amount"
+                    [ngModel]="item.value"
+                    (ngModelChange)="updateCell(child.id, parent.id, item.month, $event)"
+                    (contextmenu)="showContext($event, child.id)"
+                  />
+                }
               </div>
 
-            }
+              <button (click)="openRemovedCategoryDialog(child.id, child.name)">x</button>
+            </div>
+          }
+
+          @if (childrenOfParent(parent.id).length === 0) {
+            <div class="no-subcategories">
+              No subcategories of {{ parent.name | titlecase}} yet
+            </div>
           }
         </div>
 
@@ -65,7 +70,7 @@
         <div
           class="flex px-12 gap-4 border-b-2 border-x-2 border-solid border-black"
         >
-          <b class="italic min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">Sub total:</b>
+          <b class="italic min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap py-4">Sub total:</b>
           <div
             #syncBox
             class="syncBox flex overflow-auto whitespace-nowrap gap-2"
@@ -76,6 +81,12 @@
             }
           </div>
         </div>
+      </div>
+    }
+
+    @if (incomeCategories().length === 0) {
+      <div class="no-subcategories">
+        No subcategories of Income yet
       </div>
     }
 
@@ -107,7 +118,7 @@
 
   <p class="text-xl italic px-4 font-bold underline h-[55px] max-h-[55px] flex items-center">Expense</p>
   <div class="p-4 flex flex-col border-y-2 border-solid border-black">
-    @for (parent of expensesCategories() || []; track $index) {
+    @for (parent of expensesCategories() || []; track parent.id) {
       <div class="p-4 flex flex-col">
         <div class="flex justify-between px-2 border-b-2 border-x-2 border-solid border-black">
           <p>{{ parent.name }}</p>
@@ -115,30 +126,35 @@
         </div>
 
         <div class="px-12 border-x-2 border-solid border-black">
-          @for (child of data().categories || []; track $index) {
-            @if (child.parentId == parent.id) {
-              <div class="flex gap-4 h-auto border-b-2 border-solid border-black">
-                <p class="min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">{{ child.name }}</p>
+          @for (child of childrenOfParent(parent.id); track child.id) {
+            <div class="flex gap-4 h-auto border-b-2 border-solid border-black">
+              <p class="min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">{{ child.name }}</p>
 
-                <div
-                  #syncBox
-                  class="syncBox flex gap-2 overflow-auto whitespace-nowrap py-4"
-                  (scroll)="onScroll($event)"
-                >
-                  @for (item of getRow(child.id, parent.id) || []; track $index) {
-                    <input
-                      #input
-                      type="number"
-                      [ngModel]="item.value"
-                      (ngModelChange)="updateCell(child.id, parent.id, item.month, $event)"
-                      (contextmenu)="showContext($event, child.id)"
-                    />
-                  }
-                </div>
-
-                <button (click)="openRemovedCategoryDialog(child.id, child.name)">x</button>
+              <div
+                #syncBox
+                class="syncBox flex gap-2 overflow-auto whitespace-nowrap py-4"
+                (scroll)="onScroll($event)"
+              >
+                @for (item of getRow(child.id, parent.id) || []; track item.month) {
+                  <input
+                    #input
+                    type="number"
+                    class="input-budget-amount"
+                    [ngModel]="item.value"
+                    (ngModelChange)="updateCell(child.id, parent.id, item.month, $event)"
+                    (contextmenu)="showContext($event, child.id)"
+                  />
+                }
               </div>
-            }
+
+              <button (click)="openRemovedCategoryDialog(child.id, child.name)">x</button>
+            </div>
+          }
+
+          @if (childrenOfParent(parent.id).length === 0) {
+            <div class="no-subcategories">
+              No subcategories of {{ parent.name | titlecase}} yet
+            </div>
           }
         </div>
 
@@ -154,7 +170,7 @@
         <div
           class="flex px-12 gap-4 border-b-2 border-x-2 border-solid border-black"
         >
-          <b class="italic min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">Sub total:</b>
+          <b class="italic min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap py-4">Sub total:</b>
           <div
             #syncBox
             class="syncBox flex overflow-auto whitespace-nowrap gap-2"
@@ -165,6 +181,12 @@
             }
           </div>
         </div>
+      </div>
+    }
+
+    @if (expensesCategories().length === 0) {
+      <div class="no-subcategories">
+        No subcategories of Expense yet
       </div>
     }
 
@@ -304,7 +326,7 @@
         <input
           type="text"
           id="category-name"
-          class="w-full"
+          class="input-category-name"
           [class.invalid-category-input]="nameControl.invalid && (nameControl.dirty || nameControl.touched)"
           formControlName="name"
           [placeholder]="'Input ' + (createdCategoryDialogData().type | titlecase) + ' name'"

@@ -1,4 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   DataBudget,
   DataItemCategory,
@@ -7,11 +8,14 @@ import {
   MonthVal,
   RowItem,
 } from '@models/budget.model';
+import { BehaviorSubject, debounceTime, of, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BudgetService {
+  detroyService$ = new Subject<void>();
+
   _numberOfMonths = signal(12);
   _year = signal(2025);
 
@@ -135,7 +139,15 @@ export class BudgetService {
     });
   });
 
-  isDateUpdated = signal<boolean>(false);
+
+  stackingUpdated$ = new BehaviorSubject<boolean>(false);
+  isDateUpdated = toSignal(
+    this.stackingUpdated$.pipe(
+      debounceTime(100),
+      switchMap(res => of(res)),
+      takeUntil(this.detroyService$)
+    )
+  );
 
   constructor() {
     this.initRow();
@@ -188,7 +200,7 @@ export class BudgetService {
 
   setDateRange() {
     this.initRow();
-    this.isDateUpdated.set(true);
+    this.stackingUpdated$.next(true);
   }
 
   updateCell(categoryId: string, parentId: string, monthVal: MonthVal, value: number) {
@@ -231,7 +243,8 @@ export class BudgetService {
     }
 
   addCategory(parentId: string, name: string, type: Income | Expense) {
-    const id = `cat-${this.data().categories.length + 1}`;
+    const unixTimestamp = Math.floor(Date.now() / 1000);
+    const id = `cat-${unixTimestamp}`;
     const newCategory = {
       id,
       type,
@@ -250,10 +263,12 @@ export class BudgetService {
     });
 
     this.initRow();
+    this.stackingUpdated$.next(true);
   }
 
   addParentCategory(name: string, type: Income | Expense) {
-    const id = `pcat-${this.data().parentCategories.length + 1}`;
+    const unixTimestamp = Math.floor(Date.now() / 1000);
+    const id = `pcat-${unixTimestamp}`;
     const newParentCategory = {
       id,
       type,
@@ -271,6 +286,7 @@ export class BudgetService {
     });
 
     this.initRow();
+    this.stackingUpdated$.next(true);
   }
 
   removeCategory(id: string) {
@@ -285,6 +301,7 @@ export class BudgetService {
     });
 
     this.initRow();
+    this.stackingUpdated$.next(true);
   }
 
   removeParentCategory(id: string) {
@@ -302,6 +319,7 @@ export class BudgetService {
     });
 
     this.initRow();
+    this.stackingUpdated$.next(true);
   }
 
   applyAll(categoryId: string, value: number) {

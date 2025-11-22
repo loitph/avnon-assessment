@@ -20,7 +20,7 @@ import {
   Validators
 } from '@angular/forms';
 import { ContextMenu } from '@components/context-menu/context-menu';
-import { Expense, Income, ItemDataDialog } from '@models/budget.model';
+import { Expense, Income, ItemCategory, ItemDataDialog } from '@models/budget.model';
 import { BudgetService } from '@services/budget-service/budget-service';
 import { debounceTime, Subject, takeUntil, tap } from 'rxjs';
 import { Dialog } from '@components/dialog/dialog';
@@ -60,8 +60,15 @@ export class Planning implements AfterViewInit, OnDestroy {
   });
 
   expensesCategories = computed(() => {
-    return this.data().parentCategories.filter((c) => c.type === 'expense')
+    return this.data().parentCategories.filter((c) => c.type === 'expense');
   });
+
+  childrenOfParent(parentId: string): ItemCategory[] {
+    const childCategories = this.data().categories;
+    const result = childCategories.filter(category => category.parentId === parentId);
+
+    return result;
+  }
 
   bindingData$ = new Subject<{
     categoryId: string;
@@ -131,9 +138,9 @@ export class Planning implements AfterViewInit, OnDestroy {
         this.updateInputArray();
         this.focusFirst();
 
-        this.budgetService.isDateUpdated.set(false);
+        this.budgetService.stackingUpdated$.next(false);
       }
-    });
+    })
   }
 
   ngAfterViewInit() {
@@ -177,7 +184,9 @@ export class Planning implements AfterViewInit, OnDestroy {
   }
 
   private updateInputArray() {
-    this.inputArray = this.inputs.map((el) => el.nativeElement);
+    this.inputArray = (this.inputs || [])
+      .map((el) => el?.nativeElement || undefined)
+      .filter(el => !!el);
   }
 
   private focusFirst() {
@@ -282,6 +291,7 @@ export class Planning implements AfterViewInit, OnDestroy {
       type: 'income',
       targetId: '',
     });
+    this.formCategory.reset();
   }
 
   onCloseRemovedCategoryDialog() {
@@ -294,6 +304,7 @@ export class Planning implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.budgetService.detroyService$.next();
     this.destroy$.next();
     this.destroy$.complete();
   }
