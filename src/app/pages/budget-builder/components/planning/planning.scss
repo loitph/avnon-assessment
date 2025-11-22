@@ -1,15 +1,23 @@
 .syncBox {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .syncBox::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  display: none;
 }
 
 .syncBox {
   p, input {
     flex-shrink: 0;
-    width: 200px; /* fixed width */
+    width: 200px;
   }
+}
+
+.invalid-category-name {
+  @apply text-red-400 text-xs px-4 py-2 before:content-['*'] before:text-[0.85em];
+}
+
+.invalid-category-input {
+  @apply border-red-400 border-solid;
 }

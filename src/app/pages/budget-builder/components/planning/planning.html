@@ -1,10 +1,7 @@
 <div class="flex flex-col bg-[papayawhip]">
-  <!-- monthly -->
   <div class="flex justify-between gap-4 h-auto border-b-2 border-solid border-black px-20">
-    <!-- fake block -->
     <div class="min-w-64"></div>
 
-    <!-- items -->
     <div
       #syncBox
       class="syncBox flex gap-2 overflow-auto whitespace-nowrap py-4"
@@ -18,24 +15,21 @@
     </div>
   </div>
 
-  <!-- parent categories -->
   <p class="text-xl italic px-4 font-bold underline h-[55px] max-h-[55px] flex items-center">Income</p>
   <div class="p-4 flex flex-col border-y-2 border-solid border-black">
     @for (parent of incomeCategories() || []; track $index) {
       <div class="p-4 flex flex-col">
         <div class="flex justify-between px-2 border-b-2 border-x-2 border-solid border-black">
           <p>{{ parent.name }}</p>
-          <button (click)="removeParentCategory(parent.id)">x</button>
+          <button (click)="openRemovedCategoryDialog(parent.id, parent.name, true)">x</button>
         </div>
         
-        <!-- child categories -->
         <div class="px-12 border-x-2 border-solid border-black">
           @for (child of data().categories || []; track $index) {
             @if (child.parentId == parent.id) {
               <div class="flex justify-between gap-4 h-auto border-b-2 border-solid border-black">
                 <p class="min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">{{ child.name }}</p>
 
-                <!-- items -->
                 <div
                   #syncBox
                   class="syncBox flex gap-2 overflow-auto whitespace-nowrap py-4"
@@ -52,24 +46,22 @@
                   }
                 </div>
 
-                <button (click)="removeCategory(child.id)">x</button>
+                <button (click)="openRemovedCategoryDialog(child.id, child.name)">x</button>
               </div>
-  
+
             }
           }
         </div>
 
-        <!-- add category button -->
         <div
           class="w-full hover:cursor-pointer hover:italic hover:underline hover:text-lg px-12 flex items-center h-[55px] max-h-[55px] border-b-2 border-x-2 border-solid border-black"
-          (click)="addCategory(parent.id, parent.type)"
+          (click)="openCreatedCategoryDialog(parent.type, parent.id)"
         >
           <p>
             Add new <b>{{ parent.type | titlecase }}</b> sub-category
           </p>
         </div>
-  
-        <!-- totals -->
+
         <div
           class="flex px-12 gap-4 border-b-2 border-x-2 border-solid border-black"
         >
@@ -87,17 +79,15 @@
       </div>
     }
 
-    <!-- add category button -->
     <div
       class="w-full hover:cursor-pointer hover:italic hover:underline text-lg hover:text-xl px-16 flex items-center h-[55px] max-h-[55px] border-b-2 border-solid border-black"
-      (click)="addParentCategory('income')"
+      (click)="openCreatedCategoryDialog('income')"
     >
       <p>
         Add new <b>{{ 'income' | titlecase }}</b> category
       </p>
     </div>
 
-    <!-- totals -->
     <div
       class="flex px-16 gap-4 border-b-2 border-solid border-black"
     >
@@ -115,24 +105,21 @@
   </div>
 
 
-  <!-- parent categories -->
   <p class="text-xl italic px-4 font-bold underline h-[55px] max-h-[55px] flex items-center">Expense</p>
   <div class="p-4 flex flex-col border-y-2 border-solid border-black">
     @for (parent of expensesCategories() || []; track $index) {
       <div class="p-4 flex flex-col">
         <div class="flex justify-between px-2 border-b-2 border-x-2 border-solid border-black">
           <p>{{ parent.name }}</p>
-          <button (click)="removeParentCategory(parent.id)">x</button>
+          <button (click)="openRemovedCategoryDialog(parent.id, parent.name, true)">x</button>
         </div>
-        
-        <!-- child categories -->
+
         <div class="px-12 border-x-2 border-solid border-black">
           @for (child of data().categories || []; track $index) {
             @if (child.parentId == parent.id) {
               <div class="flex justify-between gap-4 h-auto border-b-2 border-solid border-black">
                 <p class="min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap">{{ child.name }}</p>
 
-                <!-- items -->
                 <div
                   #syncBox
                   class="syncBox flex gap-2 overflow-auto whitespace-nowrap py-4"
@@ -149,24 +136,21 @@
                   }
                 </div>
 
-                <button (click)="removeCategory(child.id)">x</button>
+                <button (click)="openRemovedCategoryDialog(child.id, child.name)">x</button>
               </div>
-  
             }
           }
         </div>
 
-        <!-- add category button -->
         <div
           class="w-full hover:cursor-pointer hover:italic hover:underline hover:text-lg px-12 flex items-center h-[55px] max-h-[55px] border-b-2 border-x-2 border-solid border-black"
-          (click)="addCategory(parent.id, parent.type)"
+          (click)="openCreatedCategoryDialog(parent.type, parent.id)"
         >
           <p>
             Add new <b>{{ parent.type | titlecase }}</b> sub-category
           </p>
         </div>
 
-        <!-- totals -->
         <div
           class="flex px-12 gap-4 border-b-2 border-x-2 border-solid border-black"
         >
@@ -184,17 +168,15 @@
       </div>
     }
 
-    <!-- add category button -->
     <div
       class="w-full hover:cursor-pointer hover:italic hover:underline text-lg hover:text-xl px-16 flex items-center h-[55px] max-h-[55px] border-b-2 border-solid border-black"
-      (click)="addParentCategory('expense')"
+      (click)="openCreatedCategoryDialog('expense')"
     >
       <p>
         Add new <b>{{ 'expense' | titlecase }}</b> category
       </p>
     </div>
 
-    <!-- totals -->
     <div
       class="flex px-16 gap-4 border-b-2 border-solid border-black"
     >
@@ -213,7 +195,6 @@
 
 
   <div class="px-4 flex flex-col">
-    <!-- profit and loss -->
     <div
       class="flex px-16 gap-4 border-b-2 border-solid border-black"
     >
@@ -231,7 +212,6 @@
       </div>
     </div>
 
-    <!-- opening balance -->
     <div
       class="flex px-16 gap-4 border-b-2 border-solid border-black"
     >
@@ -249,7 +229,6 @@
       </div>
     </div>
 
-    <!-- closing balance -->
     <div
       class="flex px-16 gap-4 border-b-2 border-solid border-black"
     >
@@ -269,11 +248,104 @@
   </div>
 </div>
 
-<!-- Context Menu -->
 @if (context().visible) {
   <bb-context-menu
     [x]="context().x"
     [y]="context().y"
     (apply)="applyToAll()"
   />
+}
+
+@if (removedCategoryDialogData().status) {
+  <bb-dialog
+    #removedDialog
+    (ok)="onRemoveCategory()"
+    (cancel)="onCloseRemovedCategoryDialog()"
+    (close)="onCloseRemovedCategoryDialog()"
+  >
+    <h2 dialog-title>
+      Confirm Delete
+    </h2>
+
+    <p dialog-body>
+      Are you sure you want to delete <b>{{ removedCategoryDialogData().name }}</b>?
+    </p>
+  
+    <button
+      dialog-actions
+      class="button-secondary"
+      (click)="removedDialog.triggerCancel()"
+    >
+      Cancel
+    </button>
+    <button
+      dialog-actions
+      class="button-primary"
+      (click)="removedDialog.triggerOk()"
+    >
+      OK
+    </button>
+  </bb-dialog>
+}
+
+@if (createdCategoryDialogData().status) {
+  <bb-dialog
+    #removedDialog
+    (ok)="onCreateCategory()"
+    (cancel)="onCloseCreatedCategoryDialog()"
+    (close)="onCloseCreatedCategoryDialog()"
+  >
+    <h2 dialog-title>
+      Create {{ createdCategoryDialogData().type | titlecase }} Category
+    </h2>
+
+    <div dialog-body>
+      <form [formGroup]="formCategory" novalidate>
+        <input
+          type="text"
+          id="category-name"
+          class="w-full"
+          [class.invalid-category-input]="nameControl.invalid && (nameControl.dirty || nameControl.touched)"
+          formControlName="name"
+          [placeholder]="'Input ' + (createdCategoryDialogData().type | titlecase) + ' name'"
+          required
+        >
+
+        @if (nameControl.invalid && (nameControl.dirty || nameControl.touched)) {
+          <div class="invalid-category-name">
+            @if (nameControl.hasError('required')) {
+              <span>
+                Name is required.
+              </span>
+            }
+            @if (nameControl.hasError('minlength')) {
+              <span>
+                Name must be at least 2 characters long.
+              </span>
+            }
+            @if (nameControl.hasError('forbiddenName')) {
+              <span>
+                Only letters, numbers, single spaces between words is allowed.
+              </span>
+            }
+          </div>
+        }
+      </form>
+    </div>
+
+    <button
+      dialog-actions
+      class="button-secondary"
+      (click)="removedDialog.triggerCancel()"
+    >
+      Cancel
+    </button>
+    <button
+      dialog-actions
+      class="button-primary"
+      (click)="removedDialog.triggerOk()"
+    >
+      OK
+    </button>
+  </bb-dialog>
 }

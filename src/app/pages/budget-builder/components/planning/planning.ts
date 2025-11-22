@@ -11,15 +11,23 @@ import {
   signal,
   ViewChildren,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { ContextMenu } from '@components/context-menu/context-menu';
-import { Expense, Income } from '@models/budget.model';
+import { Expense, Income, ItemDataDialog } from '@models/budget.model';
 import { BudgetService } from '@services/budget-service/budget-service';
 import { debounceTime, Subject, tap } from 'rxjs';
+import { Dialog } from '@components/dialog/dialog';
+import { forbiddenNameValidator } from '@directives/forbidden-name.directive';
 
 @Component({
   selector: 'bb-planning',
-  imports: [FormsModule, TitleCasePipe, ContextMenu],
+  imports: [FormsModule, TitleCasePipe, ContextMenu, Dialog, ReactiveFormsModule],
   templateUrl: './planning.html',
   styleUrl: './planning.scss',
   host: { class: 'sync-scroll-x-host' },
@@ -59,9 +67,6 @@ export class Planning implements AfterViewInit {
     value: number;
   }>();
 
-  removeCategory = this.budgetService.removeCategory.bind(this.budgetService);
-  removeParentCategory = this.budgetService.removeParentCategory.bind(this.budgetService);
-
   context = signal<{
     visible: boolean;
     x: number;
@@ -74,6 +79,37 @@ export class Planning implements AfterViewInit {
     y: 0,
     catId: '',
     value: 0
+  });
+
+  createdCategoryDialogData = signal<Omit<ItemDataDialog, 'name' | 'isParent'>>({
+    status: false,
+    type: 'income',
+    targetId: '',
+  });
+
+  // Only letters, numbers, single spaces between words is allowed
+  private testNameRegex = /^[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/;
+
+  formCategory = new FormGroup({
+    name: new FormControl('', {
+      validators: [
+        Validators.required,
+        Validators.minLength(2),
+        forbiddenNameValidator(this.testNameRegex)
+      ],
+      nonNullable: true,
+    }),
+  });
+
+  get nameControl(): FormControl {
+    return this.formCategory.controls.name;
+  }
+
+  removedCategoryDialogData = signal<Omit<ItemDataDialog, 'type'>>({
+    targetId: '',
+    name: '',
+    isParent: false,
+    status: false,
   });
 
   constructor() {
@@ -95,7 +131,7 @@ export class Planning implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     this.updateInputArray();
     this.focusFirst();
 
@@ -133,18 +169,18 @@ export class Planning implements AfterViewInit {
     this.bindingData$.next({ categoryId, parentId, month, value });
   }
 
-  private updateInputArray(): void {
+  private updateInputArray() {
     this.inputArray = this.inputs.map((el) => el.nativeElement);
   }
 
-  private focusFirst(): void {
+  private focusFirst() {
     if (this.inputArray.length > 0) {
       this.inputArray[0].focus();
     }
   }
 
   @HostListener('document:keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent): void {
+  onKeyDown(event: KeyboardEvent) {
     if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
 
     const active = document.activeElement as HTMLInputElement;
@@ -160,26 +196,6 @@ export class Planning implements AfterViewInit {
 
     this.inputArray[nextIdx].focus();
     event.preventDefault(); // stop caret movement inside the field
-  }
-
-  addCategory(parentId: string, type: Income | Expense) {
-    let name = prompt('Enter category name:')?.trim();
-    if (!name) return;
-
-    const defaultName =
-      name || `New ${type} category ${this.budgetService.data().categories.length + 1}`;
-
-    this.budgetService.addCategory(parentId, defaultName, type);
-  }
-
-  addParentCategory(type: Income | Expense) {
-    let name = prompt('Enter parent category name:')?.trim();
-    if (!name) return;
-
-    const defaultName =
-      name || `New ${type} category ${this.budgetService.data().categories.length + 1}`;
-
-    this.budgetService.addParentCategory(defaultName, type);
   }
 
   showContext(event: MouseEvent, catId: string) {
@@ -202,5 +218,71 @@ export class Planning implements AfterViewInit {
 
   hideMenu() {
     this.context.update(s => ({ ...s, visible: false }));
+  }
+
+  openCreatedCategoryDialog(type: Expense | Income, id = '') {
+    this.createdCategoryDialogData.set({
+      status: true,
+      type,
+      targetId: id,
+    });
+  }
+
+  openRemovedCategoryDialog(id: string, name = '', isParent = false) {
+    this.removedCategoryDialogData.set({
+      status: true,
+      isParent,
+      name,
+      targetId: id,
+    });
+  }
+
+  onCreateCategory() {
+    if (this.formCategory.invalid) return;
+
+    const categoryName = this.formCategory.get('name')?.value.trim();
+    if (!categoryName) return;
+
+    const type = this.createdCategoryDialogData().type;
+    const parentId = this.createdCategoryDialogData().targetId || '';
+
+    if (parentId) {
+      this.budgetService.addCategory(parentId, categoryName, type);
+    } else {
+      this.budgetService.addParentCategory(categoryName, type);
+    }
+
+    this.formCategory.reset();
+    this.onCloseCreatedCategoryDialog();
+  }
+
+  onRemoveCategory() {
+    const isParent = this.removedCategoryDialogData().isParent;
+    const targetId = this.removedCategoryDialogData().targetId || '';
+
+    if (isParent) {
+      this.budgetService.removeParentCategory(targetId);
+    } else {
+      this.budgetService.removeCategory(targetId);
+    }
+
+    this.onCloseRemovedCategoryDialog();
+  }
+
+  onCloseCreatedCategoryDialog() {
+    this.createdCategoryDialogData.set({
+      status: false,
+      type: 'income',
+      targetId: '',
+    });
+  }
+
+  onCloseRemovedCategoryDialog() {
+    this.removedCategoryDialogData.set({
+      status: false,
+      name: '',
+      isParent: false,
+      targetId: '',
+    });
   }
 }
