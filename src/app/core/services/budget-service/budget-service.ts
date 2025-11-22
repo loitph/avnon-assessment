@@ -220,26 +220,26 @@ export class BudgetService {
     });
   }
 
-    private generateMonths(): { key: MonthVal; label: string }[] {
-      let startMonth = 1;
-      let endMonth = this._numberOfMonths();
-      const year = this._year();
-      const months: { key: MonthVal; label: string }[] = [];
+  private generateMonths(): { key: MonthVal; label: string }[] {
+    let startMonth = 1;
+    let endMonth = this._numberOfMonths();
+    const year = this._year();
+    const months: { key: MonthVal; label: string }[] = [];
 
-      while (startMonth <= endMonth) {
-        months.push({
-          key: `${year}-${startMonth.toString().padStart(2, '0')}` as MonthVal,
-          label: new Date(year, startMonth - 1).toLocaleString('default', {
-            month: 'short',
-            year: 'numeric',
-          }),
-        });
+    while (startMonth <= endMonth) {
+      months.push({
+        key: `${year}-${startMonth.toString().padStart(2, '0')}` as MonthVal,
+        label: new Date(year, startMonth - 1).toLocaleString('default', {
+          month: 'short',
+          year: 'numeric',
+        }),
+      });
 
-        startMonth++;
-      }
-
-      return months;
+      startMonth++;
     }
+
+    return months;
+  }
 
   addCategory(parentId: string, name: string, type: Income | Expense) {
     const unixTimestamp = Math.floor(Date.now() / 1000);
