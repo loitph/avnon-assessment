@@ -204,7 +204,6 @@ export class Planning implements AfterViewInit, OnDestroy {
   @HostListener('document:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
     this.hideMenu();
-    event.preventDefault();
     if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
 
     const active = document.activeElement as HTMLInputElement;
@@ -224,7 +223,6 @@ export class Planning implements AfterViewInit, OnDestroy {
 
   showContext(event: MouseEvent, catId: string) {
     event.preventDefault();
-
     const value = (event.target as HTMLInputElement).valueAsNumber as number;
 
     this.context.set({
@@ -244,7 +242,6 @@ export class Planning implements AfterViewInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   hideMenu(event?: Event) {
-    event?.preventDefault();
     this.context.update(s => ({ ...s, visible: false }));
   }
 

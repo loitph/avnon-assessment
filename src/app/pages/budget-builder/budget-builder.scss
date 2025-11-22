@@ -1,0 +1,7 @@
+.budget-builder-label {
+  @apply w-full text-2xl text-center p-4 border-solid border-b-2 border-black;
+}
+
+.budget-builder-container {
+  @apply flex flex-col;
+}

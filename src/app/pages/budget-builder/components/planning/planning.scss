@@ -33,3 +33,87 @@
 .no-subcategories {
   @apply py-8 text-center italic border-b-2 border-solid border-black;
 }
+
+.budget-container {
+  @apply flex flex-col;
+
+  .date-container {
+    @apply flex gap-4 h-auto border-y-2 border-solid border-black px-20;
+
+    .date-label {
+      @apply min-w-64 border-r-2 border-solid border-black flex justify-center items-center italic underline;
+    }
+
+    .month-label {
+      @apply flex gap-2 overflow-auto whitespace-nowrap py-4;
+    }
+  }
+
+  .budget-label {
+    @apply text-xl italic px-4 font-bold underline h-[55px] max-h-[55px] flex items-center mt-8;
+  }
+
+  .budget-content {
+    @apply p-4 flex flex-col border-y-2 border-solid border-black;
+
+    .budget-item {
+      @apply p-4 flex flex-col;
+
+      .budget-parent-label {
+        @apply flex justify-between px-2 border-b-2 border-x-2 border-solid border-black;
+      }
+
+      .budget-children-content {
+        @apply px-12 border-x-2 border-solid border-black;
+
+        .budget-children-data {
+          @apply flex gap-4 h-auto border-b-2 border-solid border-black;
+
+          .budget-children-label {
+            @apply min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap;
+          }
+
+          .budget-children-input-boxes {
+            @apply flex gap-2 overflow-auto whitespace-nowrap py-4;
+          }
+        }
+      }
+
+      .btn-add-subcategory {
+        @apply w-full hover:cursor-pointer hover:italic hover:underline hover:text-lg px-12 flex items-center h-[55px] max-h-[55px] border-b-2 border-x-2 border-solid border-black;
+      }
+
+      .subtotal-container {
+        @apply flex px-12 gap-4 border-b-2 border-x-2 border-solid border-black;
+
+        .subtotal-label {
+          @apply italic min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap py-4;
+        }
+      }
+    }
+
+    .btn-add-category {
+      @apply w-full hover:cursor-pointer hover:italic hover:underline text-lg hover:text-xl px-16 flex items-center h-[55px] max-h-[55px] border-b-2 border-solid border-black;
+    }
+  }
+}
+
+.total-boxes {
+  @apply flex overflow-auto whitespace-nowrap gap-2;
+
+  .total-data {
+    @apply font-bold border-r-2 border-solid border-black py-4 px-2 text-sm;
+  }
+}
+
+.footer-container {
+  @apply px-4 flex flex-col w-full border-t-2 border-solid border-black mt-20;
+}
+
+.total-monthly-content {
+  @apply flex px-16 gap-4 border-b-2 border-solid border-black;
+
+  .total-monthly-label {
+    @apply italic text-lg min-w-64 border-solid border-r-2 border-black flex justify-start items-center text-wrap;
+  }
+}

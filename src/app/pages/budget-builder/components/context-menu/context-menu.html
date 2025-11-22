@@ -1,11 +1,11 @@
 <div
-  class="fixed bg-white border-solid border-2 border-black shadow-[0_4px_20px_rgba(0,0,0,0.2)] z-50"
+  class="menu-container"
   [style.left.px]="x"
   [style.top.px]="y"
 >
-  <div class="min-w-14 flex flex-col py-2 border-b-2 border-solid border-black">
+  <div class="options">
     <button
-      class="text-left px-4 py-2 hover:bg-slate-200"
+      class="btn"
       (click)="apply.emit()"
     >
       Apply to all
@@ -13,7 +13,7 @@
   </div>
   <div class="py-2">
     <button
-      class="text-left px-4 py-2 hover:bg-slate-200 w-full"
+      class="btn"
       (click)="close.emit()"
     >
       Close

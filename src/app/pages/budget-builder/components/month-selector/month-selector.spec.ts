@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { MonthSelector } from './month-selector';
 
 describe('MonthSelector', () => {

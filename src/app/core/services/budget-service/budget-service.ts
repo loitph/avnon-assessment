@@ -71,12 +71,12 @@ export class BudgetService {
   months = computed(() => this.generateMonths());
 
   parentTotalsById = computed<Map<string, number[]>>(() => {
-    const rows = this.data().rows ?? [];
-    const monthKeys = this.months().map(m => m.key);
+    const budgetRows = this.data().rows ?? [];
+    const monthKeys = this.months().map(month => month.key);
     const totals = new Map<string, number[]>();
     const rowsByParent = new Map<string, DataItemCategory[]>();
 
-    rows.forEach(row => {
+    budgetRows.forEach(row => {
       if (!rowsByParent.has(row.parentId)) {
         rowsByParent.set(row.parentId, []);
       }
@@ -103,26 +103,26 @@ export class BudgetService {
   });
 
   profitAndLoss = computed(() => {
-    const monthKeys = this.months().map(m => m.key);
+    const monthKeys = this.months().map(month => month.key);
     const totals = this.parentTotalsById();
 
     const incomePerMonth = monthKeys.map(() => 0);
     this.data().parentCategories
-      .filter(p => p.type === 'income')
-      .forEach(p => {
-        const arr = totals.get(p.id) ?? [];
-        arr.forEach((v, i) => incomePerMonth[i] += v);
+      .filter(parentCategory => parentCategory.type === 'income')
+      .forEach(parentCategory => {
+        const valueTotals = totals.get(parentCategory.id) ?? [];
+        valueTotals.forEach((itemValue, itemIndex) => incomePerMonth[itemIndex] += itemValue);
       });
 
     const expensePerMonth = monthKeys.map(() => 0);
     this.data().parentCategories
-      .filter(p => p.type === 'expense')
-      .forEach(p => {
-        const arr = totals.get(p.id) ?? [];
-        arr.forEach((v, i) => expensePerMonth[i] += v);
+      .filter(parentCategory => parentCategory.type === 'expense')
+      .forEach(parentCategory => {
+        const valueTotals = totals.get(parentCategory.id) ?? [];
+        valueTotals.forEach((itemValue, itemIndex) => expensePerMonth[itemIndex] += itemValue);
       });
 
-    return monthKeys.map((_, i) => incomePerMonth[i] - expensePerMonth[i]);
+    return monthKeys.map((_, monthIndex) => incomePerMonth[monthIndex] - expensePerMonth[monthIndex]);
   });
 
   openingBalance = computed(() => {
