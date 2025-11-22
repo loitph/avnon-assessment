@@ -1,6 +1,10 @@
 # AvnonAssessment
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.9.
+This project was generated using:
+
+Angular CLI: 20.3.10
+Node: 24.11.0
+Package Manager: npm 11.6.1
 
 ## Development server
 
