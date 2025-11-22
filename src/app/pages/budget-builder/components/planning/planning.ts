@@ -233,7 +233,9 @@ export class Planning implements AfterViewInit, OnDestroy {
     this.hideMenu();
   }
 
-  hideMenu() {
+  @HostListener('document:click', ['$event'])
+  hideMenu(event?: MouseEvent) {
+    event?.preventDefault();
     this.context.update(s => ({ ...s, visible: false }));
   }
 

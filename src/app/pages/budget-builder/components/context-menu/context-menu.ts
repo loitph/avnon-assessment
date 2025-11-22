@@ -11,11 +11,5 @@ export class ContextMenu {
   @Input() y = 0;
 
   @Output() apply = new EventEmitter<void>();
-
-  @HostListener('document:click', ['$event'])
-  @HostListener('document:contextmenu', ['$event'])
-  onGlobalClick(event: MouseEvent) {
-    event.stopPropagation();
-    this.apply.emit();
-  }
+  @Output() close = new EventEmitter<void>();
 }

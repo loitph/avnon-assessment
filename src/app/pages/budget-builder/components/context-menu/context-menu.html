@@ -1,8 +1,22 @@
 <div
-  class="fixed bg-white border border-solid border-gray-500 rounded p-3 shadow-md z-50"
+  class="fixed bg-white border-solid border-2 border-black shadow-[0_4px_20px_rgba(0,0,0,0.2)] z-50"
   [style.left.px]="x"
   [style.top.px]="y"
-  (click)="$event.stopPropagation()"
 >
-  <button (click)="apply.emit()">Apply to all</button>
+  <div class="min-w-14 flex flex-col py-2 border-b-2 border-solid border-black">
+    <button
+      class="text-left px-4 py-2 hover:bg-slate-200"
+      (click)="apply.emit()"
+    >
+      Apply to all
+    </button>
+  </div>
+  <div class="py-2">
+    <button
+      class="text-left px-4 py-2 hover:bg-slate-200 w-full"
+      (click)="close.emit()"
+    >
+      Close
+    </button>
+  </div>
 </div>
