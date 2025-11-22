@@ -3,7 +3,7 @@
 }
 
 .dialog {
-  @apply w-[500px] max-w-[90vw] bg-primary relative max-h-[90vh] overflow-auto shadow-[0_4px_20px_rgba(0,0,0,0.2)];
+  @apply w-[500px] max-w-[90vw] bg-primary relative max-h-[90vh] overflow-auto shadow-[0_4px_20px_rgba(0,0,0,0.2)] border-2 border-black border-solid;
 }
 
 .close-btn {
