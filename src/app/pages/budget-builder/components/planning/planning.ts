@@ -129,6 +129,7 @@ export class Planning implements AfterViewInit, OnDestroy {
         tap(({ categoryId, parentId, month, value }) => {
           this.budgetService.updateCell(categoryId, parentId, month, value);
         }),
+        takeUntil(this.destroy$)
       )
       .subscribe();
 

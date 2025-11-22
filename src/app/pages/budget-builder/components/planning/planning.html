@@ -1,6 +1,8 @@
 <div class="flex flex-col">
-  <div class="flex gap-4 h-auto border-b-2 border-solid border-black px-20">
-    <div class="min-w-64"></div>
+  <div class="flex gap-4 h-auto border-y-2 border-solid border-black px-20">
+    <div class="min-w-64 border-r-2 border-solid border-black flex justify-center items-center italic underline">
+      Date:
+    </div>
 
     <div
       #syncBox
@@ -15,7 +17,7 @@
     </div>
   </div>
 
-  <p class="text-xl italic px-4 font-bold underline h-[55px] max-h-[55px] flex items-center">Income</p>
+  <p class="text-xl italic px-4 font-bold underline h-[55px] max-h-[55px] flex items-center mt-8">Income</p>
 
   <div class="p-4 flex flex-col border-y-2 border-solid border-black">
     @for (parent of incomeCategories() || []; track parent.id) {
@@ -116,7 +118,7 @@
   </div>
 
 
-  <p class="text-xl italic px-4 font-bold underline h-[55px] max-h-[55px] flex items-center">Expense</p>
+  <p class="text-xl italic px-4 font-bold underline h-[55px] max-h-[55px] flex items-center mt-8">Expense</p>
   <div class="p-4 flex flex-col border-y-2 border-solid border-black">
     @for (parent of expensesCategories() || []; track parent.id) {
       <div class="p-4 flex flex-col">
@@ -216,7 +218,7 @@
   </div>
 
 
-  <div class="px-4 flex flex-col">
+  <div class="px-4 flex flex-col w-full border-t-2 border-solid border-black mt-20">
     <div
       class="flex px-16 gap-4 border-b-2 border-solid border-black"
     >
