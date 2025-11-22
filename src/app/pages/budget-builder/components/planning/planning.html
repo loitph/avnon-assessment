@@ -276,7 +276,7 @@
   <bb-context-menu
     [x]="context().x"
     [y]="context().y"
-    (apply)="applyToAll()"
+    (apply)="openConfirmApplyToAllDialog()"
     (close)="hideMenu()"
   />
 }
@@ -356,6 +356,38 @@
           </div>
         }
       </form>
+    </div>
+
+    <button
+      dialog-actions
+      class="button-secondary"
+      (click)="removedDialog.triggerCancel()"
+    >
+      Cancel
+    </button>
+    <button
+      dialog-actions
+      class="button-primary"
+      (click)="removedDialog.triggerOk()"
+    >
+      OK
+    </button>
+  </bb-dialog>
+}
+
+@if (applyAllDialogData().status) {
+  <bb-dialog
+    #removedDialog
+    (ok)="onAcceptApplyToAll()"
+    (cancel)="onCloseConfirmApplyToAllDialog()"
+    (close)="onCloseConfirmApplyToAllDialog()"
+  >
+    <h2 dialog-title>
+      Confirm
+    </h2>
+
+    <div dialog-body>
+      Do you want to apply this value to all months?
     </div>
 
     <button

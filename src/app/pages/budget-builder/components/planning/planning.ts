@@ -91,13 +91,18 @@ export class Planning implements AfterViewInit, OnDestroy {
     value: 0
   });
 
+  applyAllDialogData = signal<
+    Omit<ItemDataDialog, 'name' | 'isParent' | 'type' | 'targetId'>
+  >({
+    status: false,
+  });
+
   createdCategoryDialogData = signal<Omit<ItemDataDialog, 'name' | 'isParent'>>({
     status: false,
     type: 'income',
     targetId: '',
   });
 
-  // Only letters, numbers, single spaces between words is allowed
   private testNameRegex = /^[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/;
 
   formCategory = new FormGroup({
@@ -288,6 +293,18 @@ export class Planning implements AfterViewInit, OnDestroy {
     this.onCloseRemovedCategoryDialog();
   }
 
+  openConfirmApplyToAllDialog() {
+    this.hideMenu();
+    this.applyAllDialogData.set({
+      status: true
+    });
+  }
+
+  onAcceptApplyToAll() {
+    this.onCloseConfirmApplyToAllDialog();
+    this.applyToAll();
+  }
+
   onCloseCreatedCategoryDialog() {
     this.createdCategoryDialogData.set({
       status: false,
@@ -303,6 +320,12 @@ export class Planning implements AfterViewInit, OnDestroy {
       name: '',
       isParent: false,
       targetId: '',
+    });
+  }
+
+  onCloseConfirmApplyToAllDialog() {
+    this.applyAllDialogData.set({
+      status: false
     });
   }
 
