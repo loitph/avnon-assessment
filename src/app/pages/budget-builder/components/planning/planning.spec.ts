@@ -20,4 +20,52 @@ describe('Planning', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should return empty array when no income categories', () => {
+    component.data.set({
+      parentCategories: [
+        {
+          id: 'pcat-2',
+          type: 'expense',
+          name: 'Operation',
+        },
+      ],
+  
+      categories: [{
+          id: 'cat-3',
+          type: 'expense',
+          name: 'Hosting',
+          parentId: 'pcat-2',
+        },
+      ],
+  
+      rows: [],
+    });
+
+    expect(component.incomeCategories().length).toEqual(0);
+  });
+
+  it('should return empty array when no expense categories', () => {
+    component.data.set({
+      parentCategories: [
+        {
+          id: 'pcat-2',
+          type: 'income',
+          name: 'Operation',
+        },
+      ],
+  
+      categories: [{
+          id: 'cat-3',
+          type: 'income',
+          name: 'Hosting',
+          parentId: 'pcat-2',
+        },
+      ],
+  
+      rows: [],
+    });
+
+    expect(component.expensesCategories().length).toEqual(0);
+  });
 });

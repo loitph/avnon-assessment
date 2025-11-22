@@ -56,11 +56,11 @@ export class Planning implements AfterViewInit, OnDestroy {
   closingBalance = this.budgetService.closingBalance;
 
   incomeCategories = computed(() => {
-    return this.data().parentCategories.filter((c) => c.type === 'income');
+    return this.data().parentCategories.filter(parentCategory => parentCategory.type === 'income');
   });
 
   expensesCategories = computed(() => {
-    return this.data().parentCategories.filter((c) => c.type === 'expense');
+    return this.data().parentCategories.filter(parentCategory => parentCategory.type === 'expense');
   });
 
   childrenOfParent(parentId: string): ItemCategory[] {
@@ -179,7 +179,7 @@ export class Planning implements AfterViewInit, OnDestroy {
 
   getRow(categoryId: string, parentId: string) {
     return Object.entries(
-      this.data().rows.find((r) => r.categoryId === categoryId && r.parentId === parentId)?.values || {},
+      this.data().rows.find(row => row.categoryId === categoryId && row.parentId === parentId)?.values || {},
     ).map(([month, value]) => {
       return { month: month, value: value };
     });
@@ -191,8 +191,8 @@ export class Planning implements AfterViewInit, OnDestroy {
 
   private updateInputArray() {
     this.inputArray = (this.inputs || [])
-      .map((el) => el?.nativeElement || undefined)
-      .filter(el => !!el);
+      .map(inputBudget => inputBudget?.nativeElement || undefined)
+      .filter(inputBudget => !!inputBudget);
   }
 
   private focusFirst() {
@@ -242,7 +242,7 @@ export class Planning implements AfterViewInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   hideMenu(event?: Event) {
-    this.context.update(s => ({ ...s, visible: false }));
+    this.context.update(menuData => ({ ...menuData, visible: false }));
   }
 
   openCreatedCategoryDialog(type: Expense | Income, id = '') {

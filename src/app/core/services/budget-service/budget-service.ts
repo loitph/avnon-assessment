@@ -127,8 +127,8 @@ export class BudgetService {
 
   openingBalance = computed(() => {
     const pnlValues = this.profitAndLoss();
-    return [0, ...pnlValues.slice(0, -1).map((_, i) => {
-      return pnlValues.slice(0, i + 1).reduce((a, b) => a + b, 0);
+    return [0, ...pnlValues.slice(0, -1).map((_, pnlIndex: number) => {
+      return pnlValues.slice(0, pnlIndex + 1).reduce((pnlAccumulator: number, pnlCurrent: number) => pnlAccumulator + pnlCurrent, 0);
     })];
   });
 
@@ -146,7 +146,7 @@ export class BudgetService {
   isDateUpdated = toSignal(
     this.stackingUpdated$.pipe(
       debounceTime(100),
-      switchMap(res => of(res)),
+      switchMap(latestStacking => of(latestStacking)),
       takeUntil(this.detroyService$)
     )
   );
@@ -161,8 +161,8 @@ export class BudgetService {
 
     const currentRows = currentData.rows || [];
 
-    const updatedRows = currentData.categories.map((cat, catIdx) => {
-      const existingRow = currentRows.find((r) => r.categoryId === cat.id);
+    const updatedRows = currentData.categories.map((currentCategory, currentCategoryIdx) => {
+      const existingRow = currentRows.find((currentRow) => currentRow.categoryId === currentCategory.id);
       const oldValues = existingRow?.values || {};
       const newValues: RowItem = {};
 
@@ -172,10 +172,10 @@ export class BudgetService {
       });
 
       return {
-        id: existingRow?.id || `row-${catIdx + 1}`,
-        type: cat.type,
-        categoryId: cat.id,
-        parentId: cat.parentId,
+        id: existingRow?.id || `row-${currentCategoryIdx + 1}`,
+        type: currentCategory.type,
+        categoryId: currentCategory.id,
+        parentId: currentCategory.parentId,
         values: newValues,
       } as DataItemCategory;
     });
@@ -192,8 +192,8 @@ export class BudgetService {
 
     return monthKeys.map(month => {
       return rows
-        .filter(r => r.type === type)
-        .reduce((sum, r) => sum + (r.values[month] ?? 0), 0);
+        .filter(currentRow => currentRow.type === type)
+        .reduce((accumulator, currentRow) => accumulator + (currentRow.values[month] ?? 0), 0);
     });
   }
 
@@ -203,20 +203,20 @@ export class BudgetService {
   }
 
   updateCell(categoryId: string, parentId: string, monthVal: MonthVal, value: number) {
-    this.data.update((d) => {
-      const newRows = d.rows.map((row) =>
-        row.categoryId === categoryId && row.parentId === parentId
+    this.data.update((currentData) => {
+      const newRows = currentData.rows.map((currentRow) =>
+        currentRow.categoryId === categoryId && currentRow.parentId === parentId
           ? {
-              ...row,
+              ...currentRow,
               values: {
-                ...row.values,
+                ...currentRow.values,
                 [monthVal]: value,
               },
             }
-          : row,
+          : currentRow,
       );
 
-      return { ...d, rows: newRows };
+      return { ...currentData, rows: newRows };
     });
   }
 
@@ -254,9 +254,9 @@ export class BudgetService {
     let categories = this.data().categories;
     categories = [...categories, newCategory];
 
-    this.data.update((d) => {
+    this.data.update(currentData => {
       return {
-        ...d,
+        ...currentData,
         categories,
       };
     });
@@ -277,9 +277,9 @@ export class BudgetService {
     let parentCategories = this.data().parentCategories;
     parentCategories = [...parentCategories, newParentCategory];
 
-    this.data.update((d) => {
+    this.data.update(currentData => {
       return {
-        ...d,
+        ...currentData,
         parentCategories,
       };
     });
@@ -291,10 +291,10 @@ export class BudgetService {
   removeCategory(id: string) {
     if (!id) return;
 
-    const categories = this.data().categories.filter((c) => c.id !== id);
-    this.data.update((d) => {
+    const categories = this.data().categories.filter(categoryItem => categoryItem.id !== id);
+    this.data.update(currentData => {
       return {
-        ...d,
+        ...currentData,
         categories,
       };
     });
@@ -306,12 +306,12 @@ export class BudgetService {
   removeParentCategory(id: string) {
     if (!id) return;
 
-    const parentCategories = this.data().parentCategories.filter((pc) => pc.id !== id);
-    const categories = this.data().categories.filter((c) => c.parentId !== id);
+    const parentCategories = this.data().parentCategories.filter(parentCategoryItem => parentCategoryItem.id !== id);
+    const categories = this.data().categories.filter(categoryItem => categoryItem.parentId !== id);
 
-    this.data.update((d) => {
+    this.data.update(currentData => {
       return {
-        ...d,
+        ...currentData,
         parentCategories,
         categories,
       };
@@ -322,20 +322,20 @@ export class BudgetService {
   }
 
   applyAll(categoryId: string, value: number) {
-    const clickedRow = this.data().rows.find(r => r.categoryId === categoryId);
+    const clickedRow = this.data().rows.find(row => row.categoryId === categoryId);
     if (!clickedRow) return;
     const targetParentId = clickedRow.parentId;
 
-    this.data.update(d => ({
-      ...d,
-      rows: d.rows.map(row => {
+    this.data.update(currentData => ({
+      ...currentData,
+      rows: currentData.rows.map(row => {
         if (row.categoryId !== categoryId || row.parentId !== targetParentId) {
           return row;
         }
 
-        const allMonths = this.months().map(m => m.key);
+        const allMonths = this.months().map(month => month.key);
         const newValues: Record<string, number> = {};
-        allMonths.forEach(m => newValues[m] = value);
+        allMonths.forEach(month => newValues[month] = value);
 
         return { ...row, values: newValues };
       })
