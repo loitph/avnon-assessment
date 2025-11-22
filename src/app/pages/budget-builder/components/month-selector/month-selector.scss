@@ -5,3 +5,7 @@
 .date-title {
   @apply block text-sm font-medium;
 }
+
+#month-selector, #year-selector {
+  @apply outline-none text-base border-2 border-black border-solid;
+}

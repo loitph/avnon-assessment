@@ -9,7 +9,6 @@
 
     <select
       id="month-selector"
-      class="outline-none text-base border-primary"
       [ngModel]="_numberOfMonths()"
       (change)="updateMonth($event)"
     >
@@ -29,7 +28,6 @@
 
     <select
       id="year-selector"
-      class="outline-none text-base border-primary"
       [ngModel]="_year()"
       (change)="updateYear($event)"
     >
