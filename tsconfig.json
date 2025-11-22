@@ -19,6 +19,7 @@
       "@services/*": ["./src/app/core/services/*"],
       "@utils/*": ["./src/app/core/utils/*"],
       "@components/*": ["./src/app/pages/budget-builder/components/*"],
+      "@directives/*": ["./src/app/core/directives/*"],
     }
   },
   "angularCompilerOptions": {
