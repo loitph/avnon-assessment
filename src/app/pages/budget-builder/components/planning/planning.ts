@@ -40,7 +40,7 @@ export class Planning implements AfterViewInit, OnDestroy {
   private inputArray: HTMLInputElement[] = [];
 
   @ViewChildren('syncBox') syncBoxes!: QueryList<ElementRef>;
-  private isSyncing = false; // prevents feedback loop
+  private isSyncing = false;
 
   private budgetService = inject(BudgetService);
 
@@ -203,26 +203,30 @@ export class Planning implements AfterViewInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
+    this.hideMenu();
+    event.preventDefault();
     if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
 
     const active = document.activeElement as HTMLInputElement;
     const idx = this.inputArray.indexOf(active);
-    if (idx === -1) return; // not one of our inputs
+
+    if (idx === -1) return;
 
     let nextIdx: number;
     if (event.key === 'ArrowLeft') {
-      nextIdx = idx > 0 ? idx - 1 : this.inputArray.length - 1; // wrap left
+      nextIdx = idx > 0 ? idx - 1 : this.inputArray.length - 1;
     } else {
-      nextIdx = idx < this.inputArray.length - 1 ? idx + 1 : 0; // wrap right
+      nextIdx = idx < this.inputArray.length - 1 ? idx + 1 : 0;
     }
 
     this.inputArray[nextIdx].focus();
-    event.preventDefault(); // stop caret movement inside the field
   }
 
   showContext(event: MouseEvent, catId: string) {
     event.preventDefault();
+
     const value = (event.target as HTMLInputElement).valueAsNumber as number;
+
     this.context.set({
       visible: true,
       x: event.clientX,
@@ -239,7 +243,7 @@ export class Planning implements AfterViewInit, OnDestroy {
   }
 
   @HostListener('document:click', ['$event'])
-  hideMenu(event?: MouseEvent) {
+  hideMenu(event?: Event) {
     event?.preventDefault();
     this.context.update(s => ({ ...s, visible: false }));
   }

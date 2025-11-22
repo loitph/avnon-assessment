@@ -1,4 +1,8 @@
-import { computed, Injectable, signal } from '@angular/core';
+import {
+  computed,
+  Injectable,
+  signal
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   DataBudget,
@@ -8,7 +12,14 @@ import {
   MonthVal,
   RowItem,
 } from '@models/budget.model';
-import { BehaviorSubject, debounceTime, of, Subject, switchMap, takeUntil } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  of,
+  Subject,
+  switchMap,
+  takeUntil
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -54,9 +65,7 @@ export class BudgetService {
       },
     ],
 
-    rows: [
-      // monthly data
-    ], // yearly data
+    rows: [],
   });
 
   months = computed(() => this.generateMonths());
@@ -64,25 +73,21 @@ export class BudgetService {
   parentTotalsById = computed<Map<string, number[]>>(() => {
     const rows = this.data().rows ?? [];
     const monthKeys = this.months().map(m => m.key);
-  
-    // [parentId]: <sum per month>
     const totals = new Map<string, number[]>();
-  
     const rowsByParent = new Map<string, DataItemCategory[]>();
+
     rows.forEach(row => {
       if (!rowsByParent.has(row.parentId)) {
         rowsByParent.set(row.parentId, []);
       }
       rowsByParent.get(row.parentId)!.push(row);
     });
-  
-    // sum for each parent
+
     rowsByParent.forEach((parentRows, parentId) => {
       const sumPerMonth = monthKeys.map(month => {
         return parentRows.reduce((sum, row) => sum + (row.values[month] ?? 0), 0);
       });
 
-      // store result
       totals.set(parentId, sumPerMonth);
     });
   
@@ -101,7 +106,6 @@ export class BudgetService {
     const monthKeys = this.months().map(m => m.key);
     const totals = this.parentTotalsById();
 
-    // total income
     const incomePerMonth = monthKeys.map(() => 0);
     this.data().parentCategories
       .filter(p => p.type === 'income')
@@ -110,7 +114,6 @@ export class BudgetService {
         arr.forEach((v, i) => incomePerMonth[i] += v);
       });
 
-    // total expense
     const expensePerMonth = monthKeys.map(() => 0);
     this.data().parentCategories
       .filter(p => p.type === 'expense')
@@ -119,7 +122,6 @@ export class BudgetService {
         arr.forEach((v, i) => expensePerMonth[i] += v);
       });
 
-    // result
     return monthKeys.map((_, i) => incomePerMonth[i] - expensePerMonth[i]);
   });
 
@@ -162,13 +164,10 @@ export class BudgetService {
     const updatedRows = currentData.categories.map((cat, catIdx) => {
       const existingRow = currentRows.find((r) => r.categoryId === cat.id);
       const oldValues = existingRow?.values || {};
-
-      // only keep months that are in valid range
       const newValues: RowItem = {};
 
       newMonths.forEach((month) => {
         const key = month.key;
-        // preserve old value if exists, else default to 0
         newValues[key] = oldValues[key] ?? 0;
       });
 
