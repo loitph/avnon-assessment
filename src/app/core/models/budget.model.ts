@@ -32,3 +32,11 @@ export interface DataBudget {
   categories: ItemCategory[];
   rows: DataItemCategory[]
 }
+
+export interface ItemDataDialog {
+  status: boolean;
+  name: string;
+  type: Expense | Income;
+  isParent: boolean;
+  targetId: string;
+}
