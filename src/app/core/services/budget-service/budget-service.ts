@@ -141,7 +141,7 @@ export class BudgetService {
     this.initRow();
   }
 
-  private initRow(): void {
+  private initRow() {
     const currentData = this.data();
     const newMonths = this.months();
 
@@ -186,13 +186,13 @@ export class BudgetService {
     });
   }
 
-  setDateRange(start: MonthVal, end: MonthVal): void {
+  setDateRange(start: MonthVal, end: MonthVal) {
     this.data.update((d) => ({ ...d, startMonth: start, endMonth: end }));
     this.initRow();
     this.isDateUpdated.set(true);
   }
 
-  updateCell(categoryId: string, parentId: string, monthVal: MonthVal, value: number): void {
+  updateCell(categoryId: string, parentId: string, monthVal: MonthVal, value: number) {
     this.data.update((d) => {
       const newRows = d.rows.map((row) =>
         row.categoryId === categoryId && row.parentId === parentId
@@ -239,7 +239,7 @@ export class BudgetService {
     return months;
   }
 
-  addCategory(parentId: string, name: string, type: Income | Expense): void {
+  addCategory(parentId: string, name: string, type: Income | Expense) {
     const id = `cat-${this.data().categories.length + 1}`;
     const newCategory = {
       id,
@@ -261,7 +261,7 @@ export class BudgetService {
     this.initRow();
   }
 
-  addParentCategory(name: string, type: Income | Expense): void {
+  addParentCategory(name: string, type: Income | Expense) {
     const id = `pcat-${this.data().parentCategories.length + 1}`;
     const newParentCategory = {
       id,
@@ -282,9 +282,10 @@ export class BudgetService {
     this.initRow();
   }
 
-  removeCategory(id: string): void {
-    const categories = this.data().categories.filter((c) => c.id !== id);
+  removeCategory(id: string) {
+    if (!id) return;
 
+    const categories = this.data().categories.filter((c) => c.id !== id);
     this.data.update((d) => {
       return {
         ...d,
@@ -295,7 +296,9 @@ export class BudgetService {
     this.initRow();
   }
 
-  removeParentCategory(id: string): void {
+  removeParentCategory(id: string) {
+    if (!id) return;
+
     const parentCategories = this.data().parentCategories.filter((pc) => pc.id !== id);
     const categories = this.data().categories.filter((c) => c.parentId !== id);
 
@@ -310,7 +313,7 @@ export class BudgetService {
     this.initRow();
   }
 
-  applyAll(categoryId: string, value: number): void {
+  applyAll(categoryId: string, value: number) {
     const clickedRow = this.data().rows.find(r => r.categoryId === categoryId);
     if (!clickedRow) return;
     const targetParentId = clickedRow.parentId;
