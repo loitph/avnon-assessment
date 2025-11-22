@@ -1,0 +1,23 @@
+.dialog-overlay {
+  @apply flex justify-center items-center bg-opacity-50 bg-black z-50 fixed inset-0;
+}
+
+.dialog {
+  @apply w-[500px] max-w-[90vw] bg-primary relative max-h-[90vh] overflow-auto shadow-[0_4px_20px_rgba(0,0,0,0.2)];
+}
+
+.close-btn {
+  @apply cursor-pointer size-10 flex justify-end items-center;
+}
+
+.dialog-title {
+  @apply px-12 text-xl font-semibold leading-[4rem] flex justify-between items-center;
+}
+
+.dialog-body {
+  @apply py-4 px-12 text-wrap min-h-32;
+}
+
+.dialog-actions {
+  @apply py-4 px-12 flex justify-end gap-4;
+}

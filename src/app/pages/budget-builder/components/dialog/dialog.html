@@ -1,0 +1,27 @@
+<div
+  class="dialog-overlay"
+  (click)="onBackdropClick($event)"
+>
+  <div
+    class="dialog border-primary"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="dialog-title border-bottom-primary">
+      <ng-content select="[dialog-title]"></ng-content>
+      <button
+        class="close-btn"
+        (click)="triggerClose()"
+      >
+        x
+      </button>
+    </div>
+
+    <div class="dialog-body border-bottom-primary">
+      <ng-content select="[dialog-body]"></ng-content>
+    </div>
+
+    <div class="dialog-actions">
+      <ng-content select="[dialog-actions]"></ng-content>
+    </div>
+  </div>
+</div>
