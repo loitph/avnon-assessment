@@ -90,7 +90,7 @@ export class BudgetService {
 
       totals.set(parentId, sumPerMonth);
     });
-  
+
     return totals;
   });
 

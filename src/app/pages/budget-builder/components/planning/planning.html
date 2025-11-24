@@ -9,9 +9,9 @@
       class="syncBox month-label"
       (scroll)="onScroll($event)"
     >
-      @for (m of months() || []; track $index) {
+      @for (month of months() || []; track month.key) {
         <p >
-          {{ m.label }}
+          {{ month.label }}
         </p>
       }
     </div>
