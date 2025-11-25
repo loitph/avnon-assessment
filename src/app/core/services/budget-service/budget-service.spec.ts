@@ -18,7 +18,7 @@ describe('Budget', () => {
   it('should generate 12 months for year 2025', () => {
     const result = service.months();
 
-    expect(result.length).toBe(12);
+    expect(result.length).toEqual(12);
     expect(result[0]).toEqual({ key: '2025-01', label: 'Jan 2025' });
     expect(result[11]).toEqual({ key: '2025-12', label: 'Dec 2025' });
   });
@@ -27,7 +27,7 @@ describe('Budget', () => {
     service._numberOfMonths.set(6);
     const result = service.months();
 
-    expect(result.length).toBe(6);
+    expect(result.length).toEqual(6);
     expect(result[5]).toEqual({ key: '2025-06', label: 'Jun 2025' });
   });
 
@@ -35,7 +35,7 @@ describe('Budget', () => {
     service._year.set(2030);
     const result = service.months();
 
-    expect(result[0].key).toBe('2030-01');
+    expect(result[0].key).toEqual('2030-01');
     expect(result[0].label).toContain('2030');
   });
 
@@ -45,15 +45,30 @@ describe('Budget', () => {
       rows: [
         {
           ...budgetItem.rows[0],
-          values: { ...budgetItem.rows[0].values, '2025-01': 100, '2025-02': 50, '2025-03': 0 },
+          values: {
+            ...budgetItem.rows[0].values,
+            '2025-01': 100,
+            '2025-02': 50,
+            '2025-03': 0
+          },
         },
         {
           ...budgetItem.rows[1],
-          values: { ...budgetItem.rows[1].values, '2025-01': 200, '2025-02': 0, '2025-03': 300 },
+          values: {
+            ...budgetItem.rows[1].values,
+            '2025-01': 200,
+            '2025-02': 0,
+            '2025-03': 300
+          },
         },
         {
           ...budgetItem.rows[2],
-          values: { ...budgetItem.rows[2].values, '2025-01': 0, '2025-02': 400, '2025-03': 0 },
+          values: {
+            ...budgetItem.rows[2].values,
+            '2025-01': 0,
+            '2025-02': 400,
+            '2025-03': 0
+          },
         },
       ],
     }));
@@ -70,15 +85,30 @@ describe('Budget', () => {
       rows: [
         {
           ...budgetItem.rows[0],
-          values: { ...budgetItem.rows[0].values, '2025-01': 100, '2025-02': 50, '2025-03': 0 },
+          values: {
+            ...budgetItem.rows[0].values,
+            '2025-01': 100,
+            '2025-02': 50,
+            '2025-03': 0
+          },
         },
         {
           ...budgetItem.rows[1],
-          values: { ...budgetItem.rows[1].values, '2025-01': 200, '2025-02': 0, '2025-03': 300 },
+          values: {
+            ...budgetItem.rows[1].values,
+            '2025-01': 200,
+            '2025-02': 0,
+            '2025-03': 300
+          },
         },
         {
           ...budgetItem.rows[2],
-          values: { ...budgetItem.rows[2].values, '2025-01': 0, '2025-02': 400, '2025-03': 0 },
+          values: {
+            ...budgetItem.rows[2].values,
+            '2025-01': 0,
+            '2025-02': 400,
+            '2025-03': 0
+          },
         },
       ],
     }));
@@ -106,15 +136,30 @@ describe('Budget', () => {
       rows: [
         {
           ...budgetItem.rows[0],
-          values: { ...budgetItem.rows[0].values, '2025-01': 100, '2025-02': 50, '2025-03': 0 },
+          values: {
+            ...budgetItem.rows[0].values,
+            '2025-01': 100,
+            '2025-02': 50,
+            '2025-03': 0
+          },
         },
         {
           ...budgetItem.rows[1],
-          values: { ...budgetItem.rows[1].values, '2025-01': 200, '2025-02': 0, '2025-03': 300 },
+          values: {
+            ...budgetItem.rows[1].values,
+            '2025-01': 200,
+            '2025-02': 0,
+            '2025-03': 300
+          },
         },
         {
           ...budgetItem.rows[2],
-          values: { ...budgetItem.rows[2].values, '2025-01': 0, '2025-02': 400, '2025-03': 0 },
+          values: {
+            ...budgetItem.rows[2].values,
+            '2025-01': 0,
+            '2025-02': 400,
+            '2025-03': 0
+          },
         },
       ],
     }));
@@ -142,15 +187,30 @@ describe('Budget', () => {
       rows: [
         {
           ...budgetItem.rows[0],
-          values: { ...budgetItem.rows[0].values, '2025-01': 100, '2025-02': 50, '2025-03': 0 },
+          values: {
+            ...budgetItem.rows[0].values,
+            '2025-01': 100,
+            '2025-02': 50,
+            '2025-03': 0
+          },
         },
         {
           ...budgetItem.rows[1],
-          values: { ...budgetItem.rows[1].values, '2025-01': 200, '2025-02': 0, '2025-03': 300 },
+          values: {
+            ...budgetItem.rows[1].values,
+            '2025-01': 200,
+            '2025-02': 0,
+            '2025-03': 300
+          },
         },
         {
           ...budgetItem.rows[2],
-          values: { ...budgetItem.rows[2].values, '2025-01': 0, '2025-02': 400, '2025-03': 0 },
+          values: {
+            ...budgetItem.rows[2].values,
+            '2025-01': 0,
+            '2025-02': 400,
+            '2025-03': 0
+          },
         },
       ],
     }));
@@ -173,6 +233,8 @@ describe('Budget', () => {
   });
 
   it('should create new data()', () => {
+    service['initRow'];
+
     const expectedResultData = {
       parentCategories: [
         {
@@ -269,14 +331,6 @@ describe('Budget', () => {
         }
       ]
     } as  DataBudget;
-
-    service.data.update(budgetItem => ({
-      ...budgetItem,
-      ...expectedResultData,
-    }));
-
-    service.data.update(d => ({ ...d, }));
-    service['initRow'];
 
     expect(service.data()).toEqual(expectedResultData);
   });
@@ -379,10 +433,7 @@ describe('Budget', () => {
       ]
     } as  DataBudget;
 
-    service.data.update(budgetItem => ({
-      ...budgetItem,
-      ...expectedResultData,
-    }));
+    service.data.set(expectedResultData);
 
     service.updateCell('cat-1', 'pcat-1', '2025-01', 100);
     expect(service.data()).toEqual(expectedResultData);
@@ -420,9 +471,7 @@ describe('Budget', () => {
 
     service._numberOfMonths.set(1);
 
-    service.data.update(_ => ({
-      ...defaultData,
-    }));
+    service.data.set(defaultData);
 
     service.addCategory('pcat-1', 'Sales', 'income');
     expect(service.data().categories.length).toEqual(2);
@@ -462,9 +511,7 @@ describe('Budget', () => {
 
     service._numberOfMonths.set(1);
 
-    service.data.update(_ => ({
-      ...defaultData,
-    }));
+    service.data.set(defaultData);
 
     service.addParentCategory('Tariff', 'expense');
     expect(service.data().parentCategories.length).toEqual(2);
@@ -502,9 +549,7 @@ describe('Budget', () => {
 
     service._numberOfMonths.set(1);
 
-    service.data.update(_ => ({
-      ...defaultData,
-    }));
+    service.data.set(defaultData);
 
     service.removeCategory('cat-1');
     expect(service.data().categories.length).toEqual(0);
@@ -542,9 +587,7 @@ describe('Budget', () => {
 
     service._numberOfMonths.set(1);
 
-    service.data.update(_ => ({
-      ...defaultData,
-    }));
+    service.data.set(defaultData);
 
     service.removeParentCategory('pcat-1');
     expect(service.data().parentCategories.length).toEqual(0);
@@ -586,9 +629,7 @@ describe('Budget', () => {
 
     service._numberOfMonths.set(3);
 
-    service.data.update(_ => ({
-      ...defaultData,
-    }));
+    service.data.set(defaultData);
 
     service.applyAll('cat-1', 50);
 

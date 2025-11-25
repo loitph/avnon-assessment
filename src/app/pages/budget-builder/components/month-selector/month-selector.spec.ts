@@ -31,7 +31,7 @@ describe('MonthSelector', () => {
     yearSelect.value = '2025';
     yearSelect.dispatchEvent(new Event('change'));
 
-    expect(component._numberOfMonths()).toBe(6);
-    expect(component._year()).toBe(2025);
+    expect(component._numberOfMonths()).toEqual(6);
+    expect(component._year()).toEqual(2025);
   });
 });

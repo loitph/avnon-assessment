@@ -34,13 +34,13 @@ import { forbiddenNameValidator } from '@directives/forbidden-name.directive';
   host: { class: 'sync-scroll-x-host' },
 })
 export class Planning implements AfterViewInit, OnDestroy {
-  private destroy$ = new Subject<void>();
+  destroy$ = new Subject<void>();
 
   @ViewChildren('input') inputs!: QueryList<ElementRef<HTMLInputElement>>;
-  private inputArray: HTMLInputElement[] = [];
+  inputArray: HTMLInputElement[] = [];
 
   @ViewChildren('syncBox') syncBoxes!: QueryList<ElementRef>;
-  private isSyncing = false;
+  isSyncing = false;
 
   private budgetService = inject(BudgetService);
 
@@ -189,13 +189,13 @@ export class Planning implements AfterViewInit, OnDestroy {
     this.bindingData$.next({ categoryId, parentId, month, value });
   }
 
-  private updateInputArray() {
+  updateInputArray() {
     this.inputArray = (this.inputs || [])
       .map(inputBudget => inputBudget?.nativeElement || undefined)
       .filter(inputBudget => !!inputBudget);
   }
 
-  private focusFirst() {
+  focusFirst() {
     if (this.inputArray.length > 0) {
       this.inputArray[0].focus();
     }
