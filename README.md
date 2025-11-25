@@ -2,8 +2,8 @@
 
 This project was generated using:
 
-Angular CLI: 20.3.10
-Node: 24.11.0
+Angular CLI: 20.3.10 \
+Node: 24.11.0 \
 Package Manager: npm 11.6.1
 
 ## Development server
